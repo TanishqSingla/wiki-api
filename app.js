@@ -13,7 +13,17 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 //Initialising mongoose
-mongoose.connect("mongodb://localhost:27017/wikiDB");
+mongoose.connect("mongodb://localhost:27017/wikiDB", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+//defining article schema and model
+const articleSchema = {
+  title: String,
+  content: String,
+};
+const Article = mongoose.model("Article", articleSchema);
 
 //Creating instance for app
 app.listen(3000, () => {
