@@ -25,6 +25,17 @@ const articleSchema = {
 };
 const Article = mongoose.model("Article", articleSchema);
 
+//article route
+app.get("/articles", (req, res) => {
+  Article.find((e, foundArticles) => {
+    if (!e) {
+      res.send(foundArticles);
+    } else {
+      res.send(e);
+    }
+  });
+});
+
 //Creating instance for app
 app.listen(3000, () => {
   console.log("Server is up on port 3000");
