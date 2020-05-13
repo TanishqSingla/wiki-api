@@ -26,28 +26,44 @@ const articleSchema = {
 const Article = mongoose.model("Article", articleSchema);
 
 //article route
-app.get("/articles", (req, res) => {
-  Article.find((e, foundArticles) => {
-    if (!e) {
-      res.send(foundArticles);
-    } else {
-      res.send(e);
-    }
-  });
-});
+app
+  .route("/articles")
+  .get((req, res) => {
+    Article.find((e, foundArticles) => {
+      if (!e) {
+        res.send(foundArticles);
+      } else {
+        res.send(e);
+      }
+    });
+  })
+  .post((req, res) => {
+    const newArticle = new Article({
+      title: req.body.title,
+      content: req.body.content,
+    });
 
-app.post("/articles", (req, res) => {
-  const newArticle = new Article({
-    title: req.body.title,
-    content: req.body.content,
+    newArticle.save((e) => {
+      if (!e) {
+        res.send("Succesfully Added to Database");
+      }
+    });
+  })
+  .delete((req, res) => {
+    Article.deleteMany((e) => {
+      if (!e) {
+        res.send("Succesfully delted all articles");
+      } else {
+        res.send(e);
+      }
+    });
   });
 
-  newArticle.save((e) => {
-    if (!e) {
-      res.send("Succesfully Added to Database");
-    }
-  });
-});
+app.get("/articles");
+
+app.post("/articles");
+
+app.delete("/articles");
 
 //Creating instance for app
 app.listen(3000, () => {
