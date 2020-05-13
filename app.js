@@ -36,6 +36,19 @@ app.get("/articles", (req, res) => {
   });
 });
 
+app.post("/articles", (req, res) => {
+  const newArticle = new Article({
+    title: req.body.title,
+    content: req.body.content,
+  });
+
+  newArticle.save((e) => {
+    if (!e) {
+      res.send("Succesfully Added to Database");
+    }
+  });
+});
+
 //Creating instance for app
 app.listen(3000, () => {
   console.log("Server is up on port 3000");
