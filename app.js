@@ -59,11 +59,53 @@ app
     });
   });
 
-app.get("/articles");
-
-app.post("/articles");
-
-app.delete("/articles");
+app
+  .route("/articles/:articleTitle")
+  .get((req, res) => {
+    Article.findOne({ title: req.params.articleTitle }, (e, foundArticle) => {
+      if (foundArticle) {
+        res.send(foundArticle);
+      } else {
+        res.send("No article found");
+      }
+    });
+  })
+  .put((req, res) => {
+    Article.update(
+      { title: req.params.articleTitle },
+      { title: req.body.title, content: req.body.content },
+      { overwrite: true },
+      (e) => {
+        if (!e) {
+          res.send("Succesfully Updated Article");
+        } else {
+          res.send(e);
+        }
+      }
+    );
+  })
+  .patch((req, res) => {
+    Article.update(
+      { title: req.params.articleTitle },
+      { $set: req.body },
+      (e) => {
+        if (!e) {
+          res.send("Succesfully updated article");
+        } else {
+          res.send(e);
+        }
+      }
+    );
+  })
+  .delete((req, res) => {
+    Article.deleteOne({ title: req.params.articleTitle }, (e) => {
+      if (!e) {
+        res.send("Succesfully Deleted corresponding article");
+      } else {
+        res.send(e);
+      }
+    });
+  });
 
 //Creating instance for app
 app.listen(3000, () => {
